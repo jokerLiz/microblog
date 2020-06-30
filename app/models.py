@@ -1,4 +1,5 @@
 from datetime import datetime
+from hashlib import md5
 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -21,6 +22,9 @@ class User(UserMixin,db.Model):
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')       #反向引用，懒加载
 
+    about_me = db.Column(db.String(140))
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)      #时间
+
     #显示指定格式
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -33,6 +37,11 @@ class User(UserMixin,db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    #生成头像
+    def avantar(self,size):
+        hashvalue = md5(self.email.lower().encode('utf-8')).hexdigest()
+        avantar_url =  f'https://s.gravatar.com/avatar/{hashvalue}?d=identicon&s={size}'
+        return avantar_url
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)

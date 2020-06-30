@@ -1,3 +1,6 @@
+from datetime import datetime
+from hashlib import md5
+
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, current_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -6,7 +9,17 @@ from werkzeug.urls import url_parse
 from app import app, db  # 导入app.db对象
 from app.models import User
 
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm
+
+
+#上一次登陆时间
+@app.before_request
+def before_request():
+
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()
+
 
 @app.route('/')
 # @login_required       #指定该函数需要登陆才能访问
@@ -57,11 +70,11 @@ def login():
 
         flash('Login requested for user {},remember_me={}'.format(loginform.username.data, loginform.remember_me.data))
 
-        next_page = request.args.get('next')
+        next_page = request.args.get('next')        #获取next的值
 
-        if next_page or url_parse(next_page).netloc == '':    #判断next_page的是否存在，以及是否合法(是否有http前缀，防止跳转到其他网站)
-            return redirect(next_page)
-        return redirect(url_for('index'))
+        if not next_page or url_parse(next_page).netloc != '':      #判断next_page的是否存在，以及是否合法(是否有http前缀，防止跳转到其他网站)
+            next_page = url_for('index')           #如果不存在/不合法，将该值设为index
+        return redirect(next_page)
 
     return render_template('login.html',form=loginform,title='Sign in')
 
@@ -128,3 +141,39 @@ def detail():
 @login_required      #需要登录才能进入此函数
 def post_comment():
     return 'saasa'
+
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'}
+    ]
+    return render_template('user.html',user=user,posts=posts,title='user' )
+
+
+# @app.route('/avantar')
+# def avantar():
+#     hashvalue = md5(b'dsadwdde').hexdigest()
+#     return hashvalue
+
+@app.route('/edit_profile',methods=['GET','POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+
+       current_user.username = form.username.data
+       current_user.about_me = form.about_me.data
+       db.session.commit()
+
+       flash('Your changes have been saved.')
+
+       return redirect(url_for('user',username=current_user.username,title='user'))      #重定向到当前用户的详情页
+
+    form.username.data = current_user.username
+    form.about_me.data = current_user.about_me
+
+    return render_template('edit_profile.html',form=form,title='edit_profile')
