@@ -162,7 +162,10 @@ def user(username):
 @app.route('/edit_profile',methods=['GET','POST'])
 @login_required
 def edit_profile():
-    form = EditProfileForm()
+
+    #实例化表单，把username传进去
+    form = EditProfileForm(current_user.username)
+
     if form.validate_on_submit():
 
        current_user.username = form.username.data

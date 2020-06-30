@@ -18,8 +18,9 @@
     {% else %}
         <a href="{{ url_for('user',username=current_user.username) }}">profile</a>
         <a href="{{ url_for('logout') }}">logout</a>
-    {% endif %} 
-
+    {% endif %}
+    <br>
+    <hr>
 
     {#  flash  #}
     {% with messages = get_flashed_messages() %}

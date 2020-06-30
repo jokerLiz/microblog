@@ -3,7 +3,9 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))#获取当前.py文件的绝对路径
 
 class Config():
-    DEBUG = True
+    
+    # DEBUG = True
+
     #环境变量中的SECRET_KEY的值/固定值
     #在teminal中设置环境变量---set SECRET_KEY=xxx
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you will never guess'
