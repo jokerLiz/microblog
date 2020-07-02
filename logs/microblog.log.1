@@ -1,16 +1,4 @@
-2020-06-30 21:59:51,018 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
-2020-06-30 22:09:10,531 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
-2020-06-30 22:19:24,866 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
-2020-06-30 22:19:41,151 ERROR: Exception on /edit_profile [POST] [in E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\app.py:1892]
-Traceback (most recent call last):
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1278, in _execute_context
-    cursor, statement, parameters, context
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\engine\default.py", line 593, in do_execute
-    cursor.execute(statement, parameters)
-sqlite3.IntegrityError: UNIQUE constraint failed: user.username
-
-The above exception was the direct cause of the following exception:
-
+2020-07-02 13:33:04,626 ERROR: Exception on /user/susan [GET] [in E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\app.py:1892]
 Traceback (most recent call last):
   File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -26,54 +14,102 @@ Traceback (most recent call last):
     return self.view_functions[rule.endpoint](**req.view_args)
   File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "E:\pycharmwordspace\GitHub\microblog\app\routes.py", line 173, in edit_profile
-    db.session.commit()
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\scoping.py", line 163, in do
-    return getattr(self.registry(), name)(*args, **kwargs)
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\session.py", line 1042, in commit
-    self.transaction.commit()
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\session.py", line 504, in commit
-    self._prepare_impl()
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\session.py", line 483, in _prepare_impl
-    self.session.flush()
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\session.py", line 2523, in flush
-    self._flush(objects)
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\session.py", line 2664, in _flush
-    transaction.rollback(_capture_exception=True)
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\util\langhelpers.py", line 69, in __exit__
-    exc_value, with_traceback=exc_tb,
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\util\compat.py", line 178, in raise_
-    raise exception
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\session.py", line 2624, in _flush
-    flush_context.execute()
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\unitofwork.py", line 422, in execute
-    rec.execute(self)
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\unitofwork.py", line 589, in execute
-    uow,
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\persistence.py", line 236, in save_obj
-    update,
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\orm\persistence.py", line 995, in _emit_update_statements
-    statement, multiparams
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1014, in execute
-    return meth(self, multiparams, params)
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\sql\elements.py", line 298, in _execute_on_connection
-    return connection._execute_clauseelement(self, multiparams, params)
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1133, in _execute_clauseelement
-    distilled_params,
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1318, in _execute_context
-    e, statement, parameters, cursor, context
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1512, in _handle_dbapi_exception
-    sqlalchemy_exception, with_traceback=exc_info[2], from_=e
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\util\compat.py", line 178, in raise_
-    raise exception
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\engine\base.py", line 1278, in _execute_context
-    cursor, statement, parameters, context
-  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\sqlalchemy\engine\default.py", line 593, in do_execute
-    cursor.execute(statement, parameters)
-sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: user.username
-[SQL: UPDATE user SET username=? WHERE user.id = ?]
-[parameters: ('zhangsan', 1)]
-(Background on this error at: http://sqlalche.me/e/13/gkpj)
-2020-06-30 22:20:16,704 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
-2020-06-30 22:20:22,606 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
-2020-06-30 22:21:12,954 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+  File "E:\pycharmwordspace\GitHub\microblog\app\routes.py", line 154, in user
+    return render_template('user.html',user=user,posts=posts,title='user' )
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\templating.py", line 140, in render_template
+    ctx.app,
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\templating.py", line 120, in _render
+    rv = template.render(context)
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\jinja2\environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\jinja2\_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "E:\pycharmwordspace\GitHub\microblog\app\templates\user.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "E:\pycharmwordspace\GitHub\microblog\app\templates\base.html", line 37, in top-level template code
+    {% block content %}
+  File "E:\pycharmwordspace\GitHub\microblog\app\templates\user.html", line 22, in block "content"
+    {% elif not current_user.is_following(user) %}
+jinja2.exceptions.UndefinedError: 'app.models.User object' has no attribute 'is_following'
+2020-07-02 13:34:00,675 ERROR: Exception on /user/susan [GET] [in E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\app.py:1892]
+Traceback (most recent call last):
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask_login\utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "E:\pycharmwordspace\GitHub\microblog\app\routes.py", line 154, in user
+    return render_template('user.html',user=user,posts=posts,title='user' )
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\templating.py", line 140, in render_template
+    ctx.app,
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\flask\templating.py", line 120, in _render
+    rv = template.render(context)
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\jinja2\environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\jinja2\environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "E:\pycharmwordspace\GitHub\microblog\venv\lib\site-packages\jinja2\_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "E:\pycharmwordspace\GitHub\microblog\app\templates\user.html", line 1, in top-level template code
+    {% extends 'base.html' %}
+  File "E:\pycharmwordspace\GitHub\microblog\app\templates\base.html", line 37, in top-level template code
+    {% block content %}
+  File "E:\pycharmwordspace\GitHub\microblog\app\templates\user.html", line 22, in block "content"
+    {% elif not current_user.is_following(user) %}
+jinja2.exceptions.UndefinedError: 'app.models.User object' has no attribute 'is_following'
+2020-07-02 13:35:02,212 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 13:35:02,841 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:35:37,323 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 13:35:37,955 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:37:09,048 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 13:37:09,678 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:37:41,557 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:38:09,628 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:41:51,913 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 13:41:52,614 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:42:53,113 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 13:42:53,750 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:43:35,237 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 13:43:35,872 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:45:37,633 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:47:54,741 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 13:47:55,370 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:49:30,234 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:51:04,066 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:51:09,056 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 13:51:09,899 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:51:44,804 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 13:51:45,465 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:52:06,535 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 13:52:07,276 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:53:23,414 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:56:31,066 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 13:56:49,597 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:36:34,458 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 14:36:35,208 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:37:24,544 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 14:37:25,251 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:42:37,353 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 14:42:38,107 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:46:25,957 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:46:27,340 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 14:46:28,197 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:46:53,927 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:47:13,398 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:47:17,415 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:48:15,761 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:50:53,279 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 14:55:52,794 INFO: Microblog startup [in E:/pycharmwordspace/GitHub/microblog/microblog.py:6]
+2020-07-02 14:55:53,438 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]
+2020-07-02 15:03:30,710 INFO: Microblog startup [in E:\pycharmwordspace\GitHub\microblog\microblog.py:6]

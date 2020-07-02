@@ -14,18 +14,44 @@
                     <p>Last seen on:{{ user.last_seen }}</p>
                 {% endif %}
 
-                 {% if user == current_user %}
+                <p>粉丝数：{{ user.fans() }} 关注数：{{ user.unfans() }}</p>
+
+
+                {% if current_user == user %}
                     <p>
                         <a href="{{ url_for('edit_profile') }}">Edit your profile</a>
                     </p>
+
+                {% elif not current_user.is_follow(user) %}
+                    <p>
+                        <a href="{{ url_for('follow', username=user.username) }}">Follow</a>
+                    </p>
+
+                {% else %}
+                    <p>
+                        <a href="{{ url_for('unfollow', username=user.username) }}">Unfollow</a>
+                    </p>
                 {% endif %}
+
+
 
             </td>
         </tr>
     </table>
     <hr>
-
+{#  贴子列表  #}
     {% for post in posts %}
          {% include '_post.html' %}
     {% endfor%}
+
+    {#  页码  #}
+    {% if prev_url %}
+        <a href="{{ prev_url }}">上一页</a>
+    {% endif %}
+
+    {% if next_url %}
+        <a href="{{ next_url }}">下一页</a>
+    {% endif %}
+
+
 {% endblock %}

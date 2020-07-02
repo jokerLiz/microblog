@@ -7,12 +7,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.urls import url_parse
 
 from app import app, db  # 导入app.db对象
-from app.models import User
+from app.models import User, Post, followers
 
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
 
 
-#上一次登陆时间
+'''更新用户上一次登陆时间'''
 @app.before_request
 def before_request():
 
@@ -20,30 +20,47 @@ def before_request():
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
 
-
-@app.route('/')
-# @login_required       #指定该函数需要登陆才能访问
+'''首页'''
+@app.route('/',methods=['GET','POST'])
+@login_required       #指定该函数需要登陆才能访问,否则函数中使用到的current_user为匿名用户，不能访问到内容
 def index():
     # user = {
     #     'username':'lizhao'
     # }
+    '''实例化表单类'''
+    form = PostForm()
+    #表单提交操作
+    if form.validate_on_submit():
+        #创建post对象，当前用户id，输入框内容
+        post = Post(user_id=current_user.id,body=form.post.data)
 
-    posts = [
-        # 创建一个列表：帖子。里面元素是两个字典，每个字典里元素还是字典，分别作者、帖子内容。
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template('index.html',title='home',posts=posts)
+        #提交数据库
+        db.session.add(post)
+        db.session.commit()
+        #重定向到index
+        return redirect(url_for('index'))
+
+    #获取前台传来的页码，默认为1
+    page = request.args.get('page', 1, type=int)
+
+    # 获取用户以及该用户关注的人的贴子，并根据页码page分页
+    posts = current_user.followed_posts().paginate(page, app.config['POSTS_PER_PAGE'], False)
+
+    #如果posts对象有下一页，那么就再次访问index，并加上参数page，值为posts的下一个页码，否则传递None值。同理上一页
+    next_url = url_for('index', page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('index', page=posts.prev_num) if posts.has_prev else None
+
+    return render_template('index.html',
+                           title='home',        #标题栏
+                           posts=posts.items,         #贴子数据
+                           form=form,           #表单对象
+                           next_url=next_url,   #下一页的连接
+                           prev_url=prev_url,   #上一页的连接
+                           )
 
 
 
-
+'''登录'''
 @app.route('/login',methods=['GET','POST'])
 def login():
 
@@ -93,6 +110,7 @@ def login():
 #
 #     return 'test'
 
+'''注册'''
 @app.route('/register',methods=['GET','POST'])
 def register():
 
@@ -125,6 +143,7 @@ def register():
     return render_template('register.html',form=form,title='register')
 
 
+'''退出'''
 @app.route('/logout')
 def logout():
 
@@ -133,25 +152,42 @@ def logout():
 
     return redirect(url_for('index'))
 
-@app.route('/detail',methods=['GET'])
-def detail():
-    return render_template('detail.html',title='detail')
 
-@app.route('/detail',methods=['POST'])
-@login_required      #需要登录才能进入此函数
-def post_comment():
-    return 'saasa'
+# @app.route('/detail',methods=['GET'])
+# def detail():
+#     return render_template('detail.html',title='detail')
+#
+# @app.route('/detail',methods=['POST'])
+# @login_required      #需要登录才能进入此函数
+# def post_comment():
+#     return 'saasa'
 
+
+'''用户个人中心'''
 @app.route('/user/<username>')
 @login_required
 def user(username):
+    #查询该用户对象
     user = User.query.filter_by(username=username).first_or_404()
 
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
-    return render_template('user.html',user=user,posts=posts,title='user' )
+    # 获取前台传来的页码，默认为1
+    page = request.args.get('page', 1, type=int)
+
+    #user.posts:通过对应关系，获取该用户所有的贴子
+    # 获取当前对象的的所有贴子，排序,并根据page分页
+    posts = user.posts.order_by(Post.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+
+    # 如果posts对象有下一页，那么就再次访问，并加上参数page，值为posts的下一个页码，否则传递None值。同理上一页
+    next_url = url_for('user', username=current_user.username,page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('user', username=current_user.username,page=posts.prev_num) if posts.has_prev else None
+
+    return render_template('user.html',
+                           user=user,
+                           posts=posts.items,
+                           title='user',
+                           next_url=next_url,
+                           prev_url=prev_url,
+                           )
 
 
 # @app.route('/avantar')
@@ -159,6 +195,8 @@ def user(username):
 #     hashvalue = md5(b'dsadwdde').hexdigest()
 #     return hashvalue
 
+
+'''编辑个人资料'''
 @app.route('/edit_profile',methods=['GET','POST'])
 @login_required
 def edit_profile():
@@ -180,3 +218,72 @@ def edit_profile():
     form.about_me.data = current_user.about_me
 
     return render_template('edit_profile.html',form=form,title='edit_profile')
+
+
+@app.route('/test')
+def test():
+
+    user1 = User.query.get(1)
+    user2 = User.query.get(2)
+
+    user1.follow(user2)       #user1 关注 user2
+
+    db.session.commit()
+    # print(list(user1.followed))    #[user2]
+    # print(list(user1.followers))   #[]
+    # print(list(user2.followed))    #[]
+    # print(list(user2.followers))   #[user1]
+    return 'yes'
+
+
+'''用户关注'''
+@app.route('/follow/<username>')
+def follow(username):
+    #查询当前要关注的用户
+    user =User.query.filter_by(username=username).first()
+
+    current_user.follow(user)      #执行点关注函数，在该函数中进行判断之前是否已经关注
+
+    db.session.commit()
+
+    return redirect(f'/user/{user.username}')
+
+'''用户取消关注'''
+@app.route('/unfollow/<username>')
+def unfollow(username):
+    #查询当前要取消关注的用户
+    user =User.query.filter_by(username=username).first()
+
+    current_user.unfollow(user)      #执行取消关注函数，在该函数中进行判断之前是否已经关注
+
+    db.session.commit()
+
+    return redirect(f'/user/{user.username}')
+
+
+
+'''
+开阔版首页
+index只能展示与该用户相关的贴子，
+explore展示所有用户的贴子
+'''
+@app.route('/explore')
+def explore():
+
+    #获取前台传来的页码，默认为1
+    page = request.args.get('page', 1, type=int)
+
+    #查询所有的贴子，并倒叙排序，并根据页码page分页
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page, app.config['POSTS_PER_PAGE'], False)
+
+    #如果posts对象有下一页，那么就再次访问explore，并加上参数page，值为posts的下一个页码，否则传递None值。同理上一页
+    next_url = url_for('explore', page=posts.next_num) if posts.has_next else None
+    prev_url = url_for('explore', page=posts.prev_num) if posts.has_prev else None
+
+    #返回index页面，但是数据填充不同
+    return render_template('index.html',
+                           posts=posts.items,
+                           title='explore',
+                           next_url=next_url,
+                           prev_url=prev_url
+                           )

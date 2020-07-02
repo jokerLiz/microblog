@@ -32,8 +32,6 @@ class EditProfileForm(FlaskForm):
         super().__init__()
         self.oldmname = username     #记录旧的username
 
-
-
     def validate_username(self,username):
 
         if username.data !=self.oldmname:       #如果新的username不等于旧的username，那么就在数据库中查是否有重复
@@ -41,3 +39,9 @@ class EditProfileForm(FlaskForm):
             user = User.query.filter_by(username=username.data).first()
             if user is not None:
                 raise ValidationError('Please use a different username.')
+
+
+#贴子提交表单
+class PostForm(FlaskForm):
+    post = TextAreaField('Say something', validators=[DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('Submit')

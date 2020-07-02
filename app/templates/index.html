@@ -2,7 +2,36 @@
 
 {% block content %}
     <h1>Hello,{{ current_user.username }}!</h1>
+
+{#  提交帖子表单  #}
+    {% if form %}
+        <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.post.label }}<br>
+            {{ form.post(cols=32, rows=4) }}<br>
+            {% for error in form.post.errors %}
+                <span style="color:red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {% endif %}
+
+
+{#  贴子列表  #}
     {% for post in posts %}
-            <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
+            {% include '_post.html' %}
     {% endfor %}
+
+{#  页码  #}
+    {% if prev_url %}
+        <a href="{{ prev_url }}">上一页</a>
+    {% endif %}
+
+    {% if next_url %}
+        <a href="{{ next_url }}">下一页</a>
+    {% endif %}
+
+
 {% endblock %}ent_user.username
